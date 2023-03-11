@@ -1,0 +1,30 @@
+version: '3.0'
+services:
+  db:
+    image: arm64v8/postgres:15.2
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+  git:
+    image: atlassian/bitbucket:7.21.1-jdk11
+    volumes:
+      - ./data/bitbucket:/var/atlassian/application-data/bitbucket
+    ports:
+      - 7990:7990
+      - 7999:7999
+  identity:
+    image: bitnami/openldap:2.6.4
+    ports:
+      - '1389:1389'
+      - '1636:1636'
+    environment:
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=adminpassword
+      - LDAP_USERS=user01,user02
+      - LDAP_PASSWORDS=password01,password02
+    volumes:
+      - ./data/openldap:/bitnami/openldap
